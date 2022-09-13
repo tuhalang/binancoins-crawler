@@ -1,0 +1,28 @@
+version: "3.7"
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:
+      - -Dcrawler.batch.job.name=GetHotNewsJob
+      - app.jar
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/postgres?sslmode=disable
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=secret
+    depends_on:
+      - database
+
+  database:
+    image: postgres:12-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=secret
+
+volumes:
+  data:
